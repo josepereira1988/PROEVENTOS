@@ -34,7 +34,7 @@ namespace ProEventos.Presistence
             {
                 query = query.Include(e => e.PalestranteEventos).ThenInclude(e => e.Evento);
             }
-            query = query.OrderBy(e => e.Id).Where(p => p.Nome == Nome);
+            query = query.OrderBy(e => e.Id).Where(p => p.User.PrimeiroNome == Nome && p.User.UltimoNome == Nome);
             return await query.ToArrayAsync();
         }
         public async Task<Palestrante> GetPalestranteByIdAsync(int PalestranteId, bool includeEventos = false)

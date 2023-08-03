@@ -1,13 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ProEventos.Domain.Identity;
 using ProEventos.Domain.Models;
 
 namespace ProEventos.Presistence.Data
 {
-    public class ProEventosContext : DbContext
+    public class ProEventosContext : IdentityDbContext<User, Role, int, 
+                                        IdentityUserClaim<int>,UserRole, 
+                                        IdentityUserLogin<int>, IdentityRoleClaim<int>, 
+                                        IdentityUserToken<int>>
     {
         public ProEventosContext(DbContextOptions<ProEventosContext> options) : base(options) 
         {
@@ -20,8 +22,14 @@ namespace ProEventos.Presistence.Data
         public DbSet<RedeSocial> RedeSociais { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<PalestranteEvento>().HasKey(PE => new {PE.EventoId,PE.PalestranteId});
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserRole>(u => {
+                u.HasKey(ur => new {ur.UserId,ur.RoleId});
+                u.HasOne(ur => ur.Role).WithMany(r => r.UserRoles).HasForeignKey(ur => ur.RoleId).IsRequired();
+            });
+
+            modelBuilder.Entity<PalestranteEvento>().HasKey(PE => new {PE.EventoId,PE.PalestranteId});
             modelBuilder.Entity<Evento>()
             .HasMany(e => e.RedeSociais)
             .WithOne(rs => rs.Evento )
@@ -31,6 +39,12 @@ namespace ProEventos.Presistence.Data
             .HasMany(e => e.RedeSociais)
             .WithOne(rs => rs.Palestrante)
             .OnDelete(DeleteBehavior.Cascade);
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            string connectionString = "server=localhost;port=3306;database=ProEventos;user=ajc;password=paralela";
+            optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            
         }
     }
 }
