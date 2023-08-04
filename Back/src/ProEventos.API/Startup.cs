@@ -27,6 +27,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ProEventos.API
 {
@@ -84,7 +85,13 @@ namespace ProEventos.API
             services.AddScoped<IGeralPersist,GeralPersist>();
             services.AddScoped<IUserPersist, UserPersist>();
 
-            services.AddControllers().AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            services.AddControllers()
+                        .AddJsonOptions(x => 
+                        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+                        ).AddNewtonsoftJson( x => 
+                            x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore                            
+                            );
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddCors();
             
@@ -137,6 +144,7 @@ namespace ProEventos.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors(cors => cors.AllowAnyHeader()
                                     .AllowAnyMethod()

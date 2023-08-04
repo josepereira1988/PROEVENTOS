@@ -42,7 +42,7 @@ namespace ProEventos.Application.Services
             }
         }
 
-        public async Task<UserDto> CreateAccountAsync(UserDto userDto)
+        public async Task<UserUpdateDto> CreateAccountAsync(UserDto userDto)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace ProEventos.Application.Services
                 var result = await _userManager.CreateAsync(user, userDto.Password);
                 if (result.Succeeded)
                 {
-                    return _mapper.Map<UserDto>(user);
+                    return _mapper.Map<UserUpdateDto>(user);
                 }
                 return null;
             }
