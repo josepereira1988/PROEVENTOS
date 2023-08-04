@@ -14,8 +14,9 @@ using ProEventos.Application.Dtos;
 namespace ProEventos.API.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
-    public class AccountController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AccountController : ControllerBase
     {
         private readonly IAccountService _service;
         private readonly ITokenService _tokenService;
@@ -27,7 +28,6 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpGet("GetUser")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetUser()
         {
             try
@@ -68,24 +68,35 @@ namespace ProEventos.API.Controllers
                     $"Erro ao tentar Registrar Usuário. Erro: {ex.Message}");
             }
         }
+
         [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(UserLoginDto userLogin)
         {
             try
             {
-                var user = await _service.GetUserbyUsernameAsunc(userLogin.UserName);
-                if (user == null) return Unauthorized("Usuário ou Senha está errado");
-
-                var result = await _service.CheckUserPasswordAsync(user, userLogin.Password);
-                if (!result.Succeeded) return Unauthorized();
-
-                return Ok(new
+                if (userLogin.UserName != null && userLogin.UserName != "")
                 {
-                    userName = user.UserName,
-                    PrimeroNome = user.PrimeiroNome,
-                    token = _tokenService.CreateToken(user).Result
-                });
+                    var user = await _service.GetUserbyUsernameAsunc(userLogin.UserName);
+                    if (user == null) return Unauthorized("Usuário ou Senha está errado");
+
+                    var result = await _service.CheckUserPasswordAsync(user, userLogin.Password);
+                    if (!result.Succeeded) return Unauthorized();
+
+                    return Ok(new
+                    {
+                        userName = user.UserName,
+                        PrimeroNome = user.PrimeiroNome,
+                        token = _tokenService.CreateToken(user).Result
+                    });
+
+                }
+                else
+                {
+                    return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Login em branco.");
+                }
+
             }
             catch (Exception ex)
             {

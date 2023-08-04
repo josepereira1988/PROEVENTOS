@@ -1,6 +1,10 @@
+import { AccountService } from './../../../services/account.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { ValidatorField } from 'src/app/helpers/validatorField';
+import { User } from 'src/app/models/Identity/User';
 
 @Component({
   selector: 'app-registration',
@@ -8,10 +12,12 @@ import { ValidatorField } from 'src/app/helpers/validatorField';
   styleUrls: ['./registration.component.scss']
 })
 export class RegistrationComponent implements OnInit {
-
+  user = {} as User;
   form!: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router,
+    private toaster: ToastrService) { }
+
   get f(): any {
     return this.form.controls;
   }
@@ -20,16 +26,25 @@ export class RegistrationComponent implements OnInit {
     this.validation();
   }
   private validation(): void {
+
+
     const formOptions: AbstractControlOptions = {
-      validators: ValidatorField.MustMatch('senha','confirmeSenha')
+      validators: ValidatorField.MustMatch('password','confirmePassword')
     }
     this.form = this.fb.group({
       primeiroNome:['',Validators.required],
       ultimoNome:['',Validators.required] ,
       email:['',[Validators.required,Validators.email]] ,
       userName:['',Validators.required] ,
-      senha:['',[Validators.required,Validators.minLength(6)]] ,
-      confirmeSenha:['',[Validators.required,Validators.minLength(6)]]
+      password:['',[Validators.required,Validators.minLength(6)]] ,
+      confirmePassword:['',[Validators.required,Validators.minLength(6)]]
     },formOptions)
+  }
+  register(): void {
+    this.user = { ...this.form.value };
+    this.accountService.register(this.user).subscribe(
+      () => this.router.navigateByUrl('/dashboard'),
+      (error: any) => this.toaster.error(error.error)
+    )
   }
 }

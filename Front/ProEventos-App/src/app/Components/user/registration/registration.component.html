@@ -46,20 +46,20 @@
       </div>
       <div class="form-row">
         <div class="form-group col-sm-6">
-          <label for="">Senha:</label>
+          <label for="">Password:</label>
           <input type="password" class="form-control"
-          [ngClass]="{'is-invalid': f.senha.errors && f.senha.touched}"
-          formControlName="senha" placeholder="Digite uma Senha" />
-          <div *ngIf="f.senha.errors?.required"  class="invalid-feedback">A senha é obrigatório</div>
-          <div *ngIf="f.senha.errors?.minlength"  class="invalid-feedback">Deve ter no minimo 6 caracteres</div>
+          [ngClass]="{'is-invalid': f.password.errors && f.password.touched}"
+          formControlName="password" placeholder="Digite uma password" />
+          <div *ngIf="f.password.errors?.required"  class="invalid-feedback">A senha é obrigatório</div>
+          <div *ngIf="f.password.errors?.minlength"  class="invalid-feedback">Deve ter no minimo 6 caracteres</div>
         </div>
         <div class="form-group col-sm-6">
-          <label for="">Confirmar Senha:</label>
+          <label for="">Confirmar Password:</label>
           <input class="form-control" type="password"
-          [ngClass]="{'is-invalid': f.confirmeSenha.errors && f.confirmeSenha.touched}"
-          formControlName="confirmeSenha" placeholder="Confirme a Senha" />
-          <div *ngIf="f.confirmeSenha.errors?.required"  class="invalid-feedback">A senha é obrigatório</div>
-          <div *ngIf="f.confirmeSenha.errors?.mustMatch"  class="invalid-feedback">A senha não é igual</div>
+          [ngClass]="{'is-invalid': f.confirmePassword.errors && f.confirmePassword.touched}"
+          formControlName="confirmePassword" placeholder="Confirme a Password" />
+          <div *ngIf="f.confirmePassword.errors?.required"  class="invalid-feedback">A senha é obrigatório</div>
+          <div *ngIf="f.confirmePassword.errors?.mustMatch"  class="invalid-feedback">A senha não é igual</div>
         </div>
       </div>
       <div class="form-row p-1 mb-3">
