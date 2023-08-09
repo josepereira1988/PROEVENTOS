@@ -26,7 +26,7 @@ namespace ProEventos.Application.Services
             try
             {
                 var evento = _mapper.Map<Evento>(Model);
-                Model.UserId = userId;
+                evento.UserId = userId;
                 _geral.add<Evento>(evento);
                 if (await _geral.SaveChangeAsync())
                 {

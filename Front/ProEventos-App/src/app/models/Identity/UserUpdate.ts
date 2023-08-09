@@ -1,12 +1,11 @@
-export class UserUpdate {
+export interface UserUpdate {
   titulo: string;
   userName: string;
   primeiroNome: string;
   ultimoNome: string;
   email: string;
-  phoneNumber: string;
+  phonrNumber: string;
   funcao: string;
-  descricao: string;
   password: string;
   token: string;
 }

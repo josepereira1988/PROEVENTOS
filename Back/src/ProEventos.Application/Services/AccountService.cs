@@ -83,8 +83,10 @@ namespace ProEventos.Application.Services
                 var user = await _persist.GetUserByUserNameAsync(userUpdateDto.UserName);
                 if (user == null) return null;
                 _mapper.Map(userUpdateDto, user);
+                if(userUpdateDto.Password != null){
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
+                await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
+                }
                 _persist.Update<User>(user);
                 if (await _persist.SaveChangeAsync())
                 {
