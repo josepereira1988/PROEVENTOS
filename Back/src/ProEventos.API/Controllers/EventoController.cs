@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using ProEventos.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using ProEventos.Presistence.Models;
 
 namespace ProEventos.API.Controllers
 {
@@ -30,12 +31,14 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery]PageParams pageParams)
         {
             try
             {
-                var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(),true);
+                var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(),pageParams,true);
+                
                 if (eventos == null) return NoContent();
+                Response.AddPagination(eventos.CurrentPage,eventos.PageSize,eventos.TotalCount,eventos.TotalPages);
 
                 return Ok(eventos);
             }
@@ -61,21 +64,21 @@ namespace ProEventos.API.Controllers
             }
         }
 
-        [HttpGet("{tema}/tema")]
-        public async Task<IActionResult> GetByTema(string tema, bool includePalestrantes)
-        {
-            try
-            {
-                var eventos = await _eventoService.GetAllEventosByTemaAsync(User.GetUserId(),tema, includePalestrantes);
-                if (eventos == null) return NoContent();
-                return Ok(eventos);
-            }
-            catch (System.Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
-            }
-        }
+        // [HttpGet("{tema}/tema")]
+        // public async Task<IActionResult> GetByTema(string tema, bool includePalestrantes)
+        // {
+        //     try
+        //     {
+        //         var eventos = await _eventoService.GetAllEventosByTemaAsync(User.GetUserId(),tema, includePalestrantes);
+        //         if (eventos == null) return NoContent();
+        //         return Ok(eventos);
+        //     }
+        //     catch (System.Exception ex)
+        //     {
+        //         return this.StatusCode(StatusCodes.Status500InternalServerError,
+        //         $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
+        //     }
+        // }
         [HttpPost]
         public async Task<IActionResult> Post(EventoDto model)
         {

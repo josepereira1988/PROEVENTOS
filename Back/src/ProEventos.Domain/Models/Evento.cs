@@ -13,7 +13,7 @@ namespace ProEventos.Domain.Models
     {
         //[Key]
         public int Id { get; set; }
-        public string local { get; set; }
+        public string Local { get; set; }
         public DateTime? DataEvento { get; set; }
         
         // [NotMapped]

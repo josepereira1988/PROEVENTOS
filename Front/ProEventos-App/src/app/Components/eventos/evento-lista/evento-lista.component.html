@@ -7,7 +7,7 @@
           <div class="input-group-text">Filtro:</div>
         </div>
 
-        <input type="text" class="form-control" placeholder="Filtrar por Tema e Local" [(ngModel)]="filtroLista">
+        <input type="text" class="form-control" placeholder="Filtrar por Tema e Local" (input)="filtrarEventos($event.target)">
       </div>
     </div>
     <div>
@@ -32,7 +32,7 @@
       </tr>
     </thead>
     <tbody *ngIf="eventos && eventos.length">
-      <tr *ngFor="let evento of eventosFiltrados" (click)="detalheEvento(evento.id)" style="cursor:pointer">
+      <tr *ngFor="let evento of eventos" (click)="detalheEvento(evento.id)" style="cursor:pointer">
         <td class="d-none d-md-table-cell">
           <img [collapse]="!isCollapsed" [isAnimated]="true" [src]="mostraImagem(evento.imagemURL)"
             [style.width.px]="widthImg" [style.margin.px]="marginImg" alt="Imagem">
@@ -58,6 +58,24 @@
       </tr>
     </tfoot>
   </table>
+  <div class="d-flex justify-content-center">
+    <pagination
+    [boundaryLinks]="true"
+
+    [totalItems]="pagination.totalItems"
+    [itemsPerPage]="pagination.itemsPerPage"
+    [(ngModel)]="pagination.currentPage"
+    (pageChanged)="pageChanged($event)"
+
+    pageBtnClass="btn"
+    previousText="&lsaquo;"
+    nextText="&rsaquo;"
+    firstText="&laquo;"
+    lastText="&raquo;">
+
+  </pagination>
+  </div>
+
 </div>
 
 <ng-template #template>
@@ -67,3 +85,5 @@
     <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
   </div>
 </ng-template>
+{{eventos[0] | json}}
+{{pagination.currentPage | json}}

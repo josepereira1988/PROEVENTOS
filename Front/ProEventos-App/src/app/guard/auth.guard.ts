@@ -12,10 +12,12 @@ export class AuthGuard implements CanActivate {
   canActivate()  : boolean{
       if(localStorage.getItem('user') != null){
         return true;
+      }else{
+        this.toaster.info('Usuario não autenticado!');
+        this.router.navigate(['/user/login']);
+        return false;
       }
-      this.toaster.info('Usuario não autenticado!');
-      this.router.navigate(['/user/login']);
-      return false;
+
   }
 
 }
