@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using ProEventos.API.Extensions;
+using ProEventos.API.Helpers;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
 
@@ -20,11 +20,14 @@ namespace ProEventos.API.Controllers
     {
         private readonly IAccountService _service;
         private readonly ITokenService _tokenService;
+        private readonly IUtil _util;
+        private readonly string _destino = "Perfil";
 
-        public AccountController(IAccountService service, ITokenService tokenService)
+        public AccountController(IAccountService service, ITokenService tokenService,IUtil util)
         {
             _service = service;
             _tokenService = tokenService;
+            _util = util;
         }
 
         [HttpGet("GetUser")]
@@ -122,12 +125,6 @@ namespace ProEventos.API.Controllers
                 if (userReturn == null) return NoContent();
                 return Ok(userReturn);
 
-                // return Ok(new
-                // {
-                //     userName = userReturn.UserName,
-                //     PrimeroNome = userReturn.PrimeiroNome,
-                //     token = _tokenService.CreateToken(userReturn).Result
-                // });
             }
             catch (Exception ex)
             {
@@ -135,31 +132,30 @@ namespace ProEventos.API.Controllers
                     $"Erro ao tentar Atualizar Usuário. Erro: {ex.Message}");
             }
         }
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage()
+        {
+            try
+            {
+                var user = await _service.GetUserbyUsernameAsunc(User.GetUserName());
+                if (user == null) return NoContent();
 
-        // [HttpPost("upload-image")]
-        // public async Task<IActionResult> UploadImage()
-        // {
-        //     try
-        //     {
-        //         var user = await _service.GetUserbyUsernameAsunc(User.GetUserName());
-        //         if (user == null) return NoContent();
+                var file = Request.Form.Files[0];
+                if (file.Length > 0)
+                {
+                    _util.DeleteImage(user.ImagemURL, _destino);
+                    user.ImagemURL = await _util.SaveImage(file, _destino);
+                }
+                var userRetorno = await _service.UpdateAccount(user);
 
-        //         var file = Request.Form.Files[0];
-        //         if (file.Length > 0)
-        //         {
-        //             _util.DeleteImage(user.ImagemURL, _destino);
-        //             user.ImagemURL = await _util.SaveImage(file, _destino);
-        //         }
-        //         var userRetorno = await _accountService.UpdateAccount(user);
-
-        //         return Ok(userRetorno);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return this.StatusCode(StatusCodes.Status500InternalServerError,
-        //             $"Erro ao tentar realizar upload de Foto do Usuário. Erro: {ex.Message}");
-        //     }
-        // }
+                return Ok(userRetorno);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar realizar upload de Foto do Usuário. Erro: {ex.Message}");
+            }
+        }
 
     }
 }

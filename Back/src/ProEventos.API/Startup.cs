@@ -29,6 +29,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using ProEventos.Application;
+using ProEventos.API.Helpers;
 
 namespace ProEventos.API
 {
@@ -82,6 +83,7 @@ namespace ProEventos.API
             services.AddScoped<IPalestranteService, PalestranteService>();
             services.AddScoped<IRedeSocialService, RedeSocialService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUtil, Util>();
             
             services.AddScoped<IEventosPresist,EventosPresist>();
             services.AddScoped<ILotePersist, LotePersist>();
