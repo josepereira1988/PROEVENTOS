@@ -9,8 +9,8 @@ using ProEventos.Presistence.Data;
 namespace ProEventos.Presistence.Migrations
 {
     [DbContext(typeof(ProEventosContext))]
-    [Migration("20230803180947_UpdateUserAgain2")]
-    partial class UpdateUserAgain2
+    [Migration("20230818163712_Inicial")]
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -248,6 +248,9 @@ namespace ProEventos.Presistence.Migrations
                     b.Property<string>("ImagemURL")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("Local")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("QtdPessoas")
                         .HasColumnType("int");
 
@@ -260,9 +263,6 @@ namespace ProEventos.Presistence.Migrations
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<string>("local")
-                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -360,7 +360,7 @@ namespace ProEventos.Presistence.Migrations
 
                     b.HasIndex("PalestranteId");
 
-                    b.ToTable("RedeSociais");
+                    b.ToTable("RedesSociais");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

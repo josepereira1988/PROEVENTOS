@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProEventos.Presistence.Migrations
 {
-    public partial class UpdateUserAgain : Migration
+    public partial class Inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -209,7 +209,7 @@ namespace ProEventos.Presistence.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    local = table.Column<string>(type: "longtext", nullable: true)
+                    Local = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DataEvento = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Tema = table.Column<string>(type: "longtext", nullable: false)
@@ -309,7 +309,7 @@ namespace ProEventos.Presistence.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "RedeSociais",
+                name: "RedesSociais",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -323,15 +323,15 @@ namespace ProEventos.Presistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RedeSociais", x => x.Id);
+                    table.PrimaryKey("PK_RedesSociais", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RedeSociais_Eventos_EventoId",
+                        name: "FK_RedesSociais_Eventos_EventoId",
                         column: x => x.EventoId,
                         principalTable: "Eventos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RedeSociais_Palestrantes_PalestranteId",
+                        name: "FK_RedesSociais_Palestrantes_PalestranteId",
                         column: x => x.PalestranteId,
                         principalTable: "Palestrantes",
                         principalColumn: "Id",
@@ -402,13 +402,13 @@ namespace ProEventos.Presistence.Migrations
                 column: "PalestranteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RedeSociais_EventoId",
-                table: "RedeSociais",
+                name: "IX_RedesSociais_EventoId",
+                table: "RedesSociais",
                 column: "EventoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RedeSociais_PalestranteId",
-                table: "RedeSociais",
+                name: "IX_RedesSociais_PalestranteId",
+                table: "RedesSociais",
                 column: "PalestranteId");
         }
 
@@ -436,7 +436,7 @@ namespace ProEventos.Presistence.Migrations
                 name: "PalestrantesEventos");
 
             migrationBuilder.DropTable(
-                name: "RedeSociais");
+                name: "RedesSociais");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

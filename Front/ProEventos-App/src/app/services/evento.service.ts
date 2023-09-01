@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PaginationResult } from '../models/Pagination';
+import { PaginatedResult } from '../models/Pagination';
 @Injectable()
 export class EventoService {
 
@@ -11,8 +11,8 @@ export class EventoService {
 
   constructor(private http: HttpClient) { }
 
-  public getEventos(page?: number, itemsPerPage?: number, term?: string): Observable<PaginationResult<Evento[]>> {
-    const paginatedResult: PaginationResult<Evento[]> = new PaginationResult<Evento[]>();
+  public getEventos(page?: number, itemsPerPage?: number, term?: string): Observable<PaginatedResult<Evento[]>> {
+    const paginatedResult: PaginatedResult<Evento[]> = new PaginatedResult<Evento[]>();
     let params = new HttpParams;
     if(page != null && itemsPerPage != null){
       params = params.append('pageNumber', page.toString());

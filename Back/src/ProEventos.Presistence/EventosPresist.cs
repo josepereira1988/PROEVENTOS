@@ -6,6 +6,7 @@ using ProEventos.Domain.Models;
 using ProEventos.Presistence.Data;
 using ProEventos.Presistence.Contratos;
 using ProEventos.Presistence.Models;
+using ProEventos.Domain.Enum;
 
 namespace ProEventos.Presistence
 {
@@ -20,7 +21,7 @@ namespace ProEventos.Presistence
         }
         public async Task<PageList<Evento>> GetAllEventosAsync(int userId,PageParams pageParams, bool includePalestrantes = false)
         {
-            IQueryable<Evento> query = _context.Eventos.Include(e => e.Lotes).Include(e => e.RedeSociais);
+            IQueryable<Evento> query = _context.Eventos.Include(e => e.Lotes).Include(e => e.RedesSociais);
 
             if (includePalestrantes)
             {
@@ -34,7 +35,7 @@ namespace ProEventos.Presistence
       
         public async Task<Evento> GetEventoByIdAsync(int userId, int EventoId, bool includePalestrantes = false)
         {
-            IQueryable<Evento> query = _context.Eventos.Include(e => e.Lotes).Include(e => e.RedeSociais);
+            IQueryable<Evento> query = _context.Eventos.Include(e => e.Lotes).Include(e => e.RedesSociais);
 
             if (includePalestrantes)
             {

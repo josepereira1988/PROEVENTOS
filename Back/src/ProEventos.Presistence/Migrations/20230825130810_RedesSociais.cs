@@ -2,7 +2,7 @@
 
 namespace ProEventos.Presistence.Migrations
 {
-    public partial class UpdateUserAgain2 : Migration
+    public partial class RedesSociais : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

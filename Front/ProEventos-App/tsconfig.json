@@ -28,12 +28,14 @@
   }
   ,
   "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    "noImplicitReturns": true,
+    "strictTemplates": true
+    // "enableI18nLegacyMessageIdFormat": false,
+    // "strictInjectionParameters": true,
+    // "strictInputAccessModifiers": true,
+    // "strictTemplates": true,
+    // "noImplicitReturns": true,
 
-    "noImplicitAny": false,
+    // "noImplicitAny": false,
   }
 }

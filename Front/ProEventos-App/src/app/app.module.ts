@@ -23,6 +23,7 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgxCurrencyModule } from 'ngx-currency';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 
 
@@ -42,6 +43,11 @@ import { TituloComponent } from './shared/titulo/titulo.component';
 import { AccountService } from './services/account.service';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { HomeComponent } from './Components/home/home.component';
+import { PerfilDetalheComponent } from './Components/user/perfil/perfil-detalhe/perfil-detalhe.component';
+import { RedesSociaisComponent } from './Components/redesSociais/redesSociais.component';
+import { PalestranteListaComponent } from './Components/palestrantes/palestrante-lista/palestrante-lista.component';
+import { PalestranteDetalheComponent } from './Components/palestrantes/palestrante-detalhe/palestrante-detalhe.component';
+
 defineLocale('pt-br', ptBrLocale);
 
 @NgModule({
@@ -60,7 +66,11 @@ defineLocale('pt-br', ptBrLocale);
       UserComponent,
       RegistrationComponent,
       LoginComponent,
-      HomeComponent
+      HomeComponent,
+      PerfilDetalheComponent,
+      RedesSociaisComponent,
+      PalestranteListaComponent,
+      PalestranteDetalheComponent
 
    ],
   imports: [
@@ -83,7 +93,9 @@ defineLocale('pt-br', ptBrLocale);
     NgxSpinnerModule,
     BsDatepickerModule.forRoot(),
     NgxCurrencyModule,
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    ToastrModule.forRoot(),
+    TabsModule.forRoot()
   ],
   providers: [EventoService,LoteService,AccountService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

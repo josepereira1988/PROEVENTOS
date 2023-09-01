@@ -6,6 +6,7 @@ import { AccountService } from './../../../services/account.service';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidatorField } from 'src/app/helpers/validatorField';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-perfil',
@@ -14,73 +15,54 @@ import { ValidatorField } from 'src/app/helpers/validatorField';
 })
 export class PerfilComponent implements OnInit {
 
-  userUpdate = {} as UserUpdate;
-  form!: FormGroup;
-  get f(): any { return this.form.controls; }
+  public usuario = {} as UserUpdate;
+  public file: File;
+  public imagemURL = '';
 
-  constructor(private fb: FormBuilder,
-              private accountService:AccountService,
-              private toastr:ToastrService,
-              private spinner:NgxSpinnerService,
-              private router: Router,
-               ) { }
-
-  ngOnInit() {
-    this.validation();
-    this.carregarUsuario();
+  public get ehPalestrante(): boolean {
+    return this.usuario.funcao === 'Palestrante';
   }
 
-  private carregarUsuario(): void {
-    this.spinner.show();
-    this.accountService.getUser().subscribe(
-      (result: UserUpdate) => {this.userUpdate = result;
-                              this.spinner.hide();
-                              this.form.patchValue(this.userUpdate);
-                               this.toastr.success('Usuário Carregado', 'Sucesso');
-                              },
-      (error:any) => {this.toastr.error("erro ao carregar perfil"), console.log(error),this.spinner.hide()},
-      () => {},
-    );
-  }
-  private validation(): void {
-    const formOptions: AbstractControlOptions = {
-      validators: ValidatorField.MustMatch('password', 'confirmePassword')
-    };
+  constructor(
+    private spinner: NgxSpinnerService,
+    private toastr: ToastrService,
+    private accountService: AccountService
+  ) { }
 
-    this.form = this.fb.group({
-      userName: [''],
-        titulo: ['NaoInformado', Validators.required],
-        primeiroNome: ['', Validators.required],
-        ultimoNome: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        phoneNumber: ['', [Validators.required]],
-        descricao: ['', Validators.required],
-        funcao: ['NaoInformado', Validators.required],
-        password: ['', [Validators.minLength(4), Validators.nullValidator]],
-        confirmePassword: ['', Validators.nullValidator],
-    }, formOptions);
+  ngOnInit(): void {
+
   }
-  public resetForm(event: any): void {
-    event.preventDefault();
-    this.form.reset();
+
+  public setFormValue(usuario: UserUpdate): void {
+    this.usuario = usuario;
+    if (this.usuario.imagemURL)
+      this.imagemURL = environment.apiURL + `resources/perfil/${this.usuario.imagemURL}`;
+    else
+      this.imagemURL = './assets/img/perfil.png';
+
   }
-  onSubmit(): void {
-    // Vai parar aqui se o form estiver inválido
-    this.atualizarUsuario();
+
+  onFileChange(ev: any): void {
+    const reader = new FileReader();
+
+    reader.onload = (event: any) => this.imagemURL = event.target.result;
+
+    this.file = ev.target.files;
+    reader.readAsDataURL(this.file[0]);
+
+    this.uploadImagem();
   }
-  public atualizarUsuario() {
-    this.userUpdate = { ...this.form.value };
+
+  private uploadImagem(): void {
     this.spinner.show();
     this.accountService
-      .updateUser(this.userUpdate)
+      .postUpload(this.file)
       .subscribe(
-        () => this.toastr.success('Usuário atualizado!', 'Sucesso'),
-        (error) => {
-          this.toastr.error(error.error);
+        () => this.toastr.success('Imagem atualizada com Sucesso', 'Sucesso!'),
+        (error: any) => {
+          this.toastr.error('Erro ao fazer upload de imagem', 'Erro!');
           console.error(error);
         }
-      )
-      .add(() => this.spinner.hide());
-
+      ).add(() => this.spinner.hide());
   }
 }

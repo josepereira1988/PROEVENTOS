@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ProEventos.Domain.Identity;
 using ProEventos.Domain.Models;
 
@@ -11,9 +12,9 @@ namespace ProEventos.Presistence.Data
                                         IdentityUserLogin<int>, IdentityRoleClaim<int>, 
                                         IdentityUserToken<int>>
     {
+        //private IConfiguration _configuration;
         public ProEventosContext(DbContextOptions<ProEventosContext> options) : base(options) 
         {
-            
         }
         public DbSet<Evento> Eventos { get; set; }
         public DbSet<Lote> Lotes { get; set; }
@@ -31,12 +32,12 @@ namespace ProEventos.Presistence.Data
 
             modelBuilder.Entity<PalestranteEvento>().HasKey(PE => new {PE.EventoId,PE.PalestranteId});
             modelBuilder.Entity<Evento>()
-            .HasMany(e => e.RedeSociais)
+            .HasMany(e => e.RedesSociais)
             .WithOne(rs => rs.Evento )
             .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Palestrante>()
-            .HasMany(e => e.RedeSociais)
+            .HasMany(e => e.RedesSociais)
             .WithOne(rs => rs.Palestrante)
             .OnDelete(DeleteBehavior.Cascade);
         }

@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class LoteService {
-  baseURL = environment.apiURL +'/api/Lotes';
+  baseURL = environment.apiURL +'api/Lotes';
   constructor(private http: HttpClient) { }
   public getLotesByEventoId(id: number): Observable<Lote[]> {
     return this.http

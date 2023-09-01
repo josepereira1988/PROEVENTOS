@@ -1,4 +1,4 @@
-import { Pagination, PaginationResult } from './../../../models/Pagination';
+import { PaginatedResult, Pagination } from './../../../models/Pagination';
 import { Router } from '@angular/router';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -40,7 +40,7 @@ export class EventoListaComponent implements OnInit {
               filtrarPor
             )
             .subscribe(
-              (paginatedResult: PaginationResult<Evento[]>) => {
+              (paginatedResult: PaginatedResult<Evento[]>) => {
                 this.eventos = paginatedResult.result;
                 this.pagination = paginatedResult.pagination;
               },
@@ -71,7 +71,7 @@ export class EventoListaComponent implements OnInit {
     this.eventoService
       .getEventos(this.pagination.currentPage, this.pagination.itemsPerPage)
       .subscribe(
-        (paginatedResult: PaginationResult<Evento[]>) => {
+        (paginatedResult: PaginatedResult<Evento[]>) => {
           this.eventos = paginatedResult.result;
           this.pagination = paginatedResult.pagination;
 

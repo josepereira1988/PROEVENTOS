@@ -11,12 +11,11 @@ import { UserUpdate } from '../models/Identity/UserUpdate';
 export class AccountService {
   private currentUserSource = new ReplaySubject<User>(1);
   public currentUser$ = this.currentUserSource.asObservable();
-  baseUrl = environment.apiURL + 'api/account/';
 
+  baseUrl = environment.apiURL + 'api/account/'
   constructor(private http: HttpClient) { }
 
   public login(model: any): Observable<void> {
-    console.log(model);
     return this.http.post<User>(this.baseUrl + 'login', model).pipe(
       take(1),
       map((response: User) => {
@@ -27,18 +26,11 @@ export class AccountService {
       })
     );
   }
+
   getUser(): Observable<UserUpdate> {
     return this.http.get<UserUpdate>(this.baseUrl + 'getUser').pipe(take(1));
   }
-  public logout(): void {
-    localStorage.removeItem('user');
-    this.currentUserSource.next(null);
-    this.currentUserSource.complete();
-  }
-  public setCurrentUser(user: User): void {
-    localStorage.setItem('user', JSON.stringify(user));
-    this.currentUserSource.next(user);
-  }
+
   updateUser(model: UserUpdate): Observable<void> {
     return this.http.put<UserUpdate>(this.baseUrl + 'updateUser', model).pipe(
       take(1),
@@ -48,6 +40,7 @@ export class AccountService {
       )
     )
   }
+
   public register(model: any): Observable<void> {
     return this.http.post<User>(this.baseUrl + 'register', model).pipe(
       take(1),
@@ -58,6 +51,27 @@ export class AccountService {
         }
       })
     );
+  }
+
+  logout(): void {
+    localStorage.removeItem('user');
+    this.currentUserSource.next(null);
+    this.currentUserSource.complete();
+  }
+
+  public setCurrentUser(user: User): void {
+    localStorage.setItem('user', JSON.stringify(user));
+    this.currentUserSource.next(user);
+  }
+
+  postUpload(file: File): Observable<UserUpdate> {
+    const fileToUpload = file[0] as File;
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+
+    return this.http
+      .post<UserUpdate>(`${this.baseUrl}upload-image`, formData)
+      .pipe(take(1));
   }
 
 

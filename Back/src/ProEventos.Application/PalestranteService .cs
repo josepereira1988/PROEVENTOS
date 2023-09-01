@@ -26,6 +26,7 @@ namespace ProEventos.Application
         {
             try
             {
+                model.UserId = userId;
                 var Palestrante = _mapper.Map<Palestrante>(model);
                 Palestrante.UserId = userId;
 
